@@ -42,9 +42,41 @@ constructor(slide, wrapper){
     this.onEnd = this.onEnd.bind(this)
   }
 
+  //Slides Config
+
+  slidePosition(slide){
+    const margin = (this.wrapper.offsetWidth - slide.offsetWidth) / 2;
+    return -(slide.offsetLeft - margin);
+  }
+
+  slidesConfig(){
+    this.slideArray = [...this.slide.children].map((element) => {
+      const position = this.slidePosition(element);
+      return { element,position }
+    });
+    console.log(this.slideArray)
+  }
+
+  slidesIndexNav(index){
+    const last = this.slideArray.length -1;
+    this.index = {
+      prev: index? index - 1 : undefined,
+      current: index,
+      next: index === last ? undefined : index + 1,
+    };
+  }
+
+  changeSlide(index) {
+    const currentSlide = this.slideArray[index]
+    this.moveSlide(currentSlide.position);
+    this.slidesIndexNav(index);
+    this.dist.finalPosition = currentSlide.position;
+  }
+
   init(){
     this.bindEvents();
     this.addSlideEvents();
+    this.slidesConfig();
     return this;
   }
 }
